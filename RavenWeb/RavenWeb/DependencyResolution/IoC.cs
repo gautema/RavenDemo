@@ -16,19 +16,29 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
+using Raven.Client;
+using Raven.Client.Document;
 using StructureMap;
 namespace RavenWeb.DependencyResolution {
     public static class IoC {
         public static IContainer Initialize() {
             ObjectFactory.Initialize(x =>
-                        {
-                            x.Scan(scan =>
-                                    {
-                                        scan.TheCallingAssembly();
-                                        scan.WithDefaultConventions();
-                                    });
-            //                x.For<IExample>().Use<Example>();
-                        });
+                                         {
+                                             x.For<IDocumentStore>().Singleton().Use(y =>
+                                                                             {
+                                                                                 var store = new DocumentStore()
+                                                                                                 {
+                                                                                                     Url = "http://localhost:8082",
+                                                                                                     DefaultDatabase = "Fagkveld"
+                                                                                                 };
+                                                                                 store.Initialize();
+                                                                                 return store;
+                                                                             });
+                                             x.For<IDocumentSession>()
+                                              .HybridHttpOrThreadLocalScoped()
+                                              .Use(y => y.GetInstance<IDocumentStore>().OpenSession());
+                                             //                x.For<IExample>().Use<Example>();
+                                         });
             return ObjectFactory.Container;
         }
     }
