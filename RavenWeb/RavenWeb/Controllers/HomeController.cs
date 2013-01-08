@@ -18,7 +18,8 @@ namespace RavenWeb.Controllers
 
         public ActionResult Index()
         {
-            var users = _session.Advanced.LoadStartingWith<User>("users/").ToList();
+            var users = _session.Query<User>().Where(x => x.Name == "Gautes");
+            var users1 = _session.Query<User>().Where(x => x.Name == users.Suggest().Suggestions.First()).ToList();
 
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
