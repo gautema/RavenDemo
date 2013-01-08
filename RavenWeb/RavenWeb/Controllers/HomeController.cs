@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Raven.Client;
+using StructureMap;
 
 namespace RavenWeb.Controllers
 {
@@ -20,6 +21,13 @@ namespace RavenWeb.Controllers
         {
             var users = _session.Query<User>().Where(x => x.Name == "Gautes");
             var users1 = _session.Query<User>().Where(x => x.Name == users.Suggest().Suggestions.First()).ToList();
+
+            _session.Advanced.DocumentStore.Changes()
+                    .ForDocumentsStartingWith("user").Subscribe(x =>
+                                                                    {
+                                                                        var session = ObjectFactory.GetInstance<IDocumentSession>();
+                                                                        var user = _session.Load<User>(x.Id);
+                                                                    });
 
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
