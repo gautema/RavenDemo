@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Raven.Client;
 
 namespace RavenWeb.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IDocumentSession _session;
+
+        public HomeController(IDocumentSession session)
+        {
+            _session = session;
+        }
+
         public ActionResult Index()
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";

@@ -6,6 +6,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Raven.Client;
+using StructureMap;
 
 namespace RavenWeb
 {
@@ -23,6 +25,7 @@ namespace RavenWeb
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+            Raven.Client.MvcIntegration.RavenProfiler.InitializeFor(ObjectFactory.GetInstance<IDocumentStore>());
         }
     }
 }

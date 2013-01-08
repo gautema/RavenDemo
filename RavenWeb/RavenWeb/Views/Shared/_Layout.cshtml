@@ -9,6 +9,7 @@
         @Scripts.Render("~/bundles/modernizr")
     </head>
     <body>
+        @Raven.Client.MvcIntegration.RavenProfiler.CurrentRequestSessions()
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
