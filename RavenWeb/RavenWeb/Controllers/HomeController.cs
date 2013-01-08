@@ -18,6 +18,7 @@ namespace RavenWeb.Controllers
 
         public ActionResult Index()
         {
+            var users = _session.Query<User>().ToList();
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
             return View();
@@ -26,7 +27,9 @@ namespace RavenWeb.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your app description page.";
-
+            _session.Store(new User{Name = "Gaute"});
+            _session.Store(new User{Name = "Jan"});
+            _session.SaveChanges();
             return View();
         }
 
@@ -36,5 +39,11 @@ namespace RavenWeb.Controllers
 
             return View();
         }
+    }
+
+    public class User
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }
