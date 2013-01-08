@@ -18,12 +18,7 @@ namespace RavenWeb.Controllers
 
         public ActionResult Index()
         {
-            using (_session.Advanced.DocumentStore.AggressivelyCacheFor(new TimeSpan(0,1,0,0)))
-            {
-                var users = _session.Query<User>().Where(x => x.Name == "Gaute").Lazily();
-                var users1 = _session.Query<User>().Where(x => x.Name == "Jan").Lazily();
-                _session.Advanced.Eagerly.ExecuteAllPendingLazyOperations();
-            }
+            var users = _session.Advanced.LoadStartingWith<User>("users/").ToList();
 
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
